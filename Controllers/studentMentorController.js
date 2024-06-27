@@ -54,11 +54,20 @@ export const getMentors = async (req, res) => {
 export const assignStudent = async (req, res) => {
   const mentorID = req.params.id;
   const { arrayOfStudents } = req.body;
+  let selectedMentor = await Mentor.find({ _id: mentorID });
+  if(!selectedMentor){
+    return res.status(404).json({message:"Mentor not found"})
+  }
 
   //-------------------------------------------------------removing students from previous mentors----------------------------------------------------------
 
   for (const ele of arrayOfStudents) {
     let selectedStudent = await Students.find({ _id: ele });
+    console.log("selectedStudent", selectedStudent)
+    if(!selectedStudent){
+      return res.status(404).json({messgae:"Student not found"})
+    }
+   else{
     let allMentors = selectedStudent[0].allMentors;
     // console.log(allMentors)
     if (allMentors.length > 0) {
@@ -77,10 +86,11 @@ export const assignStudent = async (req, res) => {
         console.log("not");
       }
     }
+   }
   }
 
   //-------------------------------------------------------setting assigned students------------------------------------------------------------------------------
-  let selectedMentor = await Mentor.find({ _id: mentorID });
+  
   let existingStudents = selectedMentor[0].assignedStudents;
   let newStudents = arrayOfStudents.filter(
     (ele) => !existingStudents.includes(ele)
@@ -99,7 +109,7 @@ export const assignStudent = async (req, res) => {
     // console.log(newbiesMentors)
   });
   // console.log(newStudents)
-  res.send("Student assigned");
+  res.status(200).json({message:"Students assigned",data:selectedMentor});
 };
 
 export const previousMentors = async (req, res) => {
