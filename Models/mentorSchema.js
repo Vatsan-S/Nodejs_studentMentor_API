@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 
 const mentorSchema = mongoose.Schema({
-    mentorName:String,
-    assignedStudents:[]
-})
+  mentorName: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  assignedStudents: [],
+});
 
+const Mentor = mongoose.model("Mentor", mentorSchema);
 
-const Mentor = mongoose.model("Mentor", mentorSchema)
-
-export default Mentor
+export default Mentor;

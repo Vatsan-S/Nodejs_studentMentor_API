@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 const studentSchema = mongoose.Schema({
-  studentName: String,
+  studentName: {
+    type:String,
+    required: true,
+    unique: true,
+  },
   mentor: [],
   allMentors: []
 });
